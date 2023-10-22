@@ -5,16 +5,18 @@ namespace UsingLocalDB.Views;
 
 public partial class PageResults : ContentPage
 {
+    private readonly AppDataBase db;
 
-	public PageResults()
-	{
+
+	public PageResults(){
 		InitializeComponent();
-		SetSource();
+        db = new AppDataBase();
     }
 
 
-	private async void SetSource() {
-		List<Persona> listaPersonas = await new AppDataBase().SelectAll();
-		myListView.ItemsSource = listaPersonas;
+
+    protected override async void OnAppearing() {
+        base.OnAppearing();
+        myCollectionView.ItemsSource = await db.SelectAll();
     }
 }

@@ -9,72 +9,62 @@ using UsingLocalDB.Models;
 namespace UsingLocalDB.Controllers {
     public class AppDataBase {
 
-        //DataBase configuration variables
+        //DATABASE CONFIGURATION VARIABLES
         //=======================================================================================
-        SQLiteAsyncConnection connection;
+        private readonly static string dbFileName = "myAppDataBase.db3";
         
-        private const string dbFileName = "myAppData.db3";
+        private readonly SQLiteOpenFlags flags = SQLiteOpenFlags.ReadWrite |
+                                                 SQLiteOpenFlags.Create |
+                                                 SQLiteOpenFlags.SharedCache;
 
-        private const SQLiteOpenFlags flags = 
-            SQLiteOpenFlags.ReadWrite | 
-            SQLiteOpenFlags.Create | 
-            SQLiteOpenFlags.SharedCache;
-
-        private static readonly string dbPath = Path.Combine(FileSystem.AppDataDirectory, dbFileName);
+        private readonly string dbPath = Path.Combine(FileSystem.AppDataDirectory, dbFileName);
+        //---------------------------------------------------------------------------------------
+        private SQLiteAsyncConnection connection;
         //======================================================================================
 
 
 
-        public AppDataBase() { }
-
-
-
-
-
-
-
-        public async Task Init() {
-            if (connection is not null) {
-                return;
-
-            } else {
-                connection = new SQLiteAsyncConnection(dbPath, flags);
-                var result = await connection.CreateTableAsync<Persona>();
-            }
+        public AppDataBase() {
+            connection = new SQLiteAsyncConnection(dbPath, flags);
+            connection.CreateTableAsync<Persona>().Wait();
         }
+
+
+
 
 
 
 
         public async Task<List<Persona>> SelectAll() {
-            await Init();
             return await connection.Table<Persona>().ToListAsync();
         }
 
 
-
-
         public async Task<Persona> SelectById(int id) {
-            await Init();
             return await connection.Table<Persona>().Where(col => col.Id == id).FirstOrDefaultAsync();
         }
 
 
 
-        public async Task<int> CreateOrUpdate(Persona persona) {
-            await Init();
-            if(persona.Id != 0) {
-                return await connection.UpdateAsync(persona);
 
-            } else {
-                return await connection.InsertAsync(persona);
-            }
+
+        public async Task<int> Insert(Persona persona) {
+            return await connection.InsertAsync(persona);
         }
 
 
 
+
+
+        public async Task<int> Update(Persona persona) {
+            return await connection.UpdateAsync(persona);
+        }
+
+
+
+
+
         public async Task<int> Delete(Persona persona) {
-            await Init();
             return await connection.DeleteAsync(persona);
         }
 

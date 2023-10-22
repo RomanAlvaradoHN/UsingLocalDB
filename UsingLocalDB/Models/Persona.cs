@@ -13,11 +13,17 @@ namespace UsingLocalDB.Models {
         private string nombre;
         private string apellido;
         private string dni;
+        private byte[] foto;
+
+
+
+
 
         public Persona() {
         }
 
-        public Persona(string nombre, string apellido, string dni) {
+        public Persona(byte[] foto, string nombre, string apellido, string dni) {
+            this.Foto = foto;
             this.Nombre = nombre;
             this.Apellido = apellido;
             this.Dni = dni;
@@ -81,6 +87,21 @@ namespace UsingLocalDB.Models {
                     this.apellido = value;
                 } else {
                     this.invalidData.Add("Apellido");
+                }
+            }
+        }
+
+
+
+        [Column("Foto")]
+        public byte[] Foto {
+            get { return this.foto; }
+
+            set {
+                if (value != null && value.Length > 0) {
+                    this.foto = value;
+                } else {
+                    this.invalidData.Add("Foto");
                 }
             }
         }

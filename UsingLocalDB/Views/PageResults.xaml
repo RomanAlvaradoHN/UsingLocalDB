@@ -4,19 +4,48 @@
              x:Class="UsingLocalDB.Views.PageResults"
              Title="PageResults">
 
+    <ContentPage.Resources>
+        <Style TargetType="StackLayout">
+            <Setter Property="VisualStateManager.VisualStateGroups">
+                <VisualStateGroupList>
+                    <VisualStateGroup x:Name="CommonStates">
 
-    <ListView x:Name="myListView" RowHeight="80">
-        <ListView.ItemTemplate>
+                        <VisualState x:Name="Normal"/>
+
+                        <VisualState x:Name="Selected">
+                            <VisualState.Setters>
+                                <Setter Property="BackgroundColor" Value="LightSkyBlue" />
+                            </VisualState.Setters>
+                        </VisualState>
+                                
+                    </VisualStateGroup>
+                </VisualStateGroupList>
+            </Setter>
+        </Style>
+    </ContentPage.Resources>
+
+
+    <CollectionView x:Name="myCollectionView" SelectionMode="Single">
+        <CollectionView.ItemsLayout>
+            <LinearItemsLayout Orientation="Vertical" ItemSpacing="15"/>
+        </CollectionView.ItemsLayout>
+
+        <CollectionView.ItemTemplate>
             <DataTemplate>
-                <ViewCell>
-                    <StackLayout Orientation="Vertical" Padding="10">
-                        <Label Text="{Binding Nombre}"/>
+                <Grid Padding="10">
+                    <!-- Imagen de la persona -->
+                    <Image Source="{Binding Foto}" WidthRequest="100" HeightRequest="100" Aspect="AspectFill" />
+
+                    <!-- Detalles de la persona -->
+                    <StackLayout Spacing="5">
+                        <Label Text="{Binding Nombre}" FontAttributes="Bold" />
                         <Label Text="{Binding Apellido}" />
                         <Label Text="{Binding Dni}" />
                     </StackLayout>
-                </ViewCell>
+                </Grid>
+
             </DataTemplate>
-        </ListView.ItemTemplate>
-    </ListView>
+        </CollectionView.ItemTemplate>
+    </CollectionView>
     
 </ContentPage>
